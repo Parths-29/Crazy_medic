@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline — The Crazy Medic</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #FAF9F6;
+      color: #0F2B3C;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    .badge {
+      background: #E8443A;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-weight: bold;
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 28px;
+      margin: 0 0 8px 0;
+    }
+    p {
+      color: #5A7184;
+      font-size: 14px;
+      max-width: 380px;
+      margin-bottom: 24px;
+    }
+    button {
+      background: #0F2B3C;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="badge">The Crazy Medic</div>
+  <h1>You're currently offline</h1>
+  <p>Please check your internet connection to continue browsing study notes or viewing protected library materials.</p>
+  <button onclick="window.location.reload()">Retry Connection</button>
+</body>
+</html>
+

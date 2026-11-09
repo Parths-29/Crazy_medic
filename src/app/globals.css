@@ -1,26 +1,269 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* STEP 1 Theme Tokens: navy + cream + coral */
+  --navy: #141A2E;
+  --navy-2: #1E253D;
+  --cream: #F5EEDF;
+  --cream-2: #EADFC9;
+  --cream-3: #DDCFBA;
+  --coral: #FF6F59;
+  --coral-hover: #E85B45;
+  --coral-ink: #BA3320; /* High contrast (>= 3.2:1) against #F5EEDF cream for bold display text >= 24px */
+  --ink-muted: #6B7286;
+  --border-dark: rgba(255, 255, 255, 0.1);
+  --border-light: rgba(20, 26, 46, 0.14);
+
+  /* Neo-brutalist tokens */
+  --shadow-hard: 6px 6px 0 var(--navy);
+  --shadow-hard-sm: 4px 4px 0 var(--navy);
+  --shadow-hard-lg: 8px 8px 0 var(--navy);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-navy: var(--navy);
+  --color-navy-2: var(--navy-2);
+  --color-cream: var(--cream);
+  --color-cream-2: var(--cream-2);
+  --color-coral: var(--coral);
+  --color-coral-hover: var(--coral-hover);
+  --color-coral-ink: var(--coral-ink);
+  --color-ink-muted: var(--ink-muted);
+  --font-handwriting: var(--font-handwriting);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Base Body: Minimum 16px font size everywhere, nothing below 13px */
+html {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-size: 16px;
+  background-color: var(--cream);
+  color: var(--navy);
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background-color: transparent;
+  color: inherit;
+  font-size: 1rem; /* 16px base */
+  line-height: 1.6;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Fluid responsive typography helper clamp scales */
+.text-fluid-title {
+  font-size: clamp(1.85rem, 1.2rem + 2.5vw, 4.2rem);
+  line-height: 1.1;
+}
+
+.text-fluid-h2 {
+  font-size: clamp(1.4rem, 1rem + 1.8vw, 2.75rem);
+  line-height: 1.2;
+}
+
+.text-fluid-sub {
+  font-size: clamp(0.95rem, 0.85rem + 0.5vw, 1.25rem);
+}
+
+/* Lock scrolling ONLY when explicitly requested on home stage */
+body.stage-locked {
+  height: 100dvh;
+  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
+}
+
+/* Dark mode / dark page surfaces */
+.theme-navy {
+  background-color: var(--navy);
+  color: var(--cream);
+}
+
+.theme-cream {
+  background-color: var(--cream);
+  color: var(--navy);
+}
+
+/* Form input heights & standards across desktop & mobile */
+input, select, textarea {
+  min-height: 48px;
+  font-size: 16px;
+}
+
+/* Neo-brutalist tactile buttons */
+.btn-neo-primary {
+  background-color: var(--coral);
+  color: var(--navy);
+  border: 2px solid var(--navy);
+  border-radius: 6px;
+  font-weight: 800;
+  box-shadow: 6px 6px 0 var(--navy);
+  transform: translate(0, 0);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.15s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+}
+
+.btn-neo-primary:hover {
+  background-color: var(--coral-hover);
+  transform: translate(2px, 2px);
+  box-shadow: 4px 4px 0 var(--navy);
+}
+
+.btn-neo-primary:active {
+  transform: translate(6px, 6px);
+  box-shadow: 0 0 0 var(--navy);
+}
+
+.btn-neo-primary:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 3px;
+}
+
+.btn-neo-secondary {
+  background-color: var(--cream);
+  color: var(--navy);
+  border: 2px solid var(--navy);
+  border-radius: 6px;
+  font-weight: 800;
+  box-shadow: 6px 6px 0 var(--navy);
+  transform: translate(0, 0);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.15s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+}
+
+.btn-neo-secondary:hover {
+  background-color: var(--cream-2);
+  transform: translate(2px, 2px);
+  box-shadow: 4px 4px 0 var(--navy);
+}
+
+.btn-neo-secondary:active {
+  transform: translate(6px, 6px);
+  box-shadow: 0 0 0 var(--navy);
+}
+
+.btn-neo-secondary:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .btn-neo-primary, .btn-neo-secondary {
+    box-shadow: 4px 4px 0 var(--navy);
+  }
+  .btn-neo-primary:hover, .btn-neo-secondary:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 3px 3px 0 var(--navy);
+  }
+  .btn-neo-primary:active, .btn-neo-secondary:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 var(--navy);
+  }
+}
+
+/* Font classes */
+.font-handwriting {
+  font-family: var(--font-handwriting), "Caveat", cursive;
+}
+
+/* Continuous Marquee Animation */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+    overflow-x: auto;
+  }
+}
+
+/* Button minimum touch & click target */
+button, a.btn {
+  min-height: 44px;
+}
+
+@media (min-width: 1024px) {
+  button.btn-lg, a.btn-lg {
+    min-height: 48px;
+  }
+}
+
+/* Hardcover Notebook 3D styling */
+.notebook-shadow {
+  box-shadow:
+    0 30px 70px -15px rgba(0, 0, 0, 0.65),
+    0 12px 28px -8px rgba(0, 0, 0, 0.45);
+}
+
+.notebook-spine {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(255, 255, 255, 0.1) 35%,
+    rgba(0, 0, 0, 0.45) 70%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
+}
+
+.page-stack {
+  background: repeating-linear-gradient(
+    0deg,
+    #efe8da 0px,
+    #efe8da 2px,
+    #d9ceb8 3px,
+    #efe8da 4px
+  );
+}
+
+.font-serif {
+  font-family: var(--font-serif), Georgia, serif;
+}
+
+/* Custom scrollbars */
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 9999px;
+}
+.dark .custom-scroll::-webkit-scrollbar-thumb,
+.theme-navy .custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
 }
