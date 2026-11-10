@@ -1,9 +1,23 @@
-"use client";
-
 import React, { Suspense } from "react";
+import { redirect } from "next/navigation";
+import { auth, isGoogleConfigured } from "@/lib/auth";
 import SignIn from "@/components/ui/sign-in-3";
 
-export default function LoginPage() {
+export const dynamic = "force-dynamic";
+
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ callbackUrl?: string; error?: string }>;
+}) {
+  const params = await searchParams;
+  const session = await auth();
+
+  if (session?.user) {
+    const dest = params?.callbackUrl || "/library";
+    redirect(dest.startsWith("/") ? dest : "/library");
+  }
+
   return (
     <Suspense
       fallback={
@@ -12,7 +26,7 @@ export default function LoginPage() {
         </div>
       }
     >
-      <SignIn />
+      <SignIn googleEnabled={isGoogleConfigured} />
     </Suspense>
   );
 }

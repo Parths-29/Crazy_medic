@@ -13,3 +13,4 @@ export async function GET() {
   const orders = await Order.find({}).sort({ createdAt: -1 }).limit(100).lean();
   return NextResponse.json({ orders });
 }
+

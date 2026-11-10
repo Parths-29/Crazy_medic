@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/ui/container";
 import { MOCK_NOTEBOOKS } from "@/components/notebook/notebook-data";
@@ -29,8 +30,10 @@ interface IntroPageClientProps {
   initialTransition?: boolean;
 }
 
-export function IntroPageClient({ user, initialTransition = false }: IntroPageClientProps) {
+export function IntroPageClient({ user: serverUser, initialTransition = false }: IntroPageClientProps) {
   const router = useRouter();
+  const { data: session } = useSession();
+  const user = session?.user || serverUser;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(initialTransition);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -147,12 +150,20 @@ export function IntroPageClient({ user, initialTransition = false }: IntroPageCl
             </Link>
 
             {user ? (
-              <Link
-                href="/library"
-                className="px-4 py-2 border-2 border-[var(--navy)] bg-[var(--coral)] text-[var(--navy)] font-bold text-xs uppercase tracking-wider shadow-[4px_4px_0_var(--navy)] hover:shadow-[2px_2px_0_var(--navy)] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition"
-              >
-                My Library
-              </Link>
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/profile"
+                  className="px-3.5 py-2 border-2 border-[var(--navy)] bg-white text-[var(--navy)] font-bold text-xs uppercase tracking-wider shadow-[3px_3px_0_var(--navy)] hover:shadow-[1px_1px_0_var(--navy)] hover:translate-x-[2px] hover:translate-y-[2px] transition"
+                >
+                  {firstName || "Profile"}
+                </Link>
+                <Link
+                  href="/library"
+                  className="px-4 py-2 border-2 border-[var(--navy)] bg-[var(--coral)] text-[var(--navy)] font-bold text-xs uppercase tracking-wider shadow-[4px_4px_0_var(--navy)] hover:shadow-[2px_2px_0_var(--navy)] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition"
+                >
+                  My Library
+                </Link>
+              </div>
             ) : (
               <Link
                 href="/login"

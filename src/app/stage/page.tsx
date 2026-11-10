@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { MOCK_NOTEBOOKS } from "@/components/notebook/notebook-data";
 import { Coverflow } from "@/components/notebook/coverflow";
 import { SheetDrawer } from "@/components/notebook/sheet-drawer";
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 
 export default function StagePage() {
+  const { data: session } = useSession();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [activeSheet, setActiveSheet] = useState<"details" | "buy" | "about" | "menu" | null>(null);
@@ -108,12 +110,27 @@ export default function StagePage() {
           </button>
         </div>
 
-        {/* Small round icon buttons (Right edge: Search, Menu) */}
-        <div className="flex items-center gap-3">
+        {/* Small round icon buttons (Right edge: User, Search, Menu) */}
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          {session?.user && (
+            <Link
+              href="/profile"
+              title={`Signed in as ${session.user.name || session.user.email}`}
+              className="h-10 sm:h-11 px-3.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 flex items-center gap-2 text-xs font-bold text-[var(--cream)] transition"
+            >
+              <span className="w-6 h-6 rounded-full bg-[var(--coral)] text-[var(--navy)] flex items-center justify-center font-serif font-black text-[11px]">
+                {(session.user.name || session.user.email || "M").charAt(0).toUpperCase()}
+              </span>
+              <span className="hidden sm:inline max-w-[90px] truncate">
+                {session.user.name?.split(" ")[0] || "Account"}
+              </span>
+            </Link>
+          )}
+
           <Link
             href="/notes"
             aria-label="Search catalog"
-            className="w-11 h-11 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-[var(--cream)]/80 hover:text-[var(--cream)] transition"
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-[var(--cream)]/80 hover:text-[var(--cream)] transition"
           >
             <Search className="w-4 h-4" />
           </Link>
@@ -121,7 +138,7 @@ export default function StagePage() {
           <button
             onClick={() => setActiveSheet("menu")}
             aria-label="Open menu"
-            className="w-11 h-11 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-[var(--cream)]/80 hover:text-[var(--cream)] transition cursor-pointer"
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-[var(--cream)]/80 hover:text-[var(--cream)] transition cursor-pointer"
           >
             <Menu className="w-4 h-4" />
           </button>

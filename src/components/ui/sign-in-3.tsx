@@ -48,11 +48,13 @@ const REVIEWS: Review[] = [
   },
 ];
 
-export function SignIn() {
+export function SignIn({ googleEnabled = false }: { googleEnabled?: boolean }) {
   const id = useId();
   const router = useRouter();
   const searchParams = useSearchParams();
   const errorCode = searchParams?.get("error");
+  const rawCallback = searchParams?.get("callbackUrl");
+  const callbackUrl = rawCallback && rawCallback.startsWith("/") ? rawCallback : "/library";
 
   const [tab, setTab] = useState<"email" | "phone">("email");
   const [email, setEmail] = useState("");
@@ -60,6 +62,7 @@ export function SignIn() {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
+  const [otpMessage, setOtpMessage] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -73,7 +76,7 @@ export function SignIn() {
     if (!code) return null;
     switch (code) {
       case "Configuration":
-        return "Google OAuth credentials not configured yet in .env.local.";
+        return "Google OAuth credentials are missing or invalid. Please add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env.local.";
       case "AccessDenied":
         return "Sign in was canceled or access was denied.";
       case "OAuthAccountNotLinked":
@@ -103,8 +106,8 @@ export function SignIn() {
         setError(res.error === "CredentialsSignin" ? "Invalid email or password" : res.error);
         setLoading(false);
       } else {
-        router.push("/notes");
-        router.refresh();
+        // Force a clean navigation so server components and headers reflect the persisted session cookie immediately
+        window.location.assign(callbackUrl);
       }
     } catch (err: any) {
       setError(err?.message || "Sign in failed");
@@ -116,18 +119,77 @@ export function SignIn() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setTimeout(() => {
-      setOtpSent(true);
+    setOtpMessage(null);
+
+    try {
+      const res = await fetch("/api/otp/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Failed to send OTP");
+      } else {
+        setOtpSent(true);
+        setOtpMessage(
+          data.devOtp
+            ? `Dev OTP sent: ${data.devOtp} (Check terminal if in dev mode)`
+            : "6-digit verification code sent to your mobile."
+        );
+      }
+    } catch {
+      setError("Network error sending OTP.");
+    } finally {
       setLoading(false);
-    }, 600);
+    }
   };
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      router.push("/notes");
-    }, 600);
+    setError(null);
+
+    try {
+      const verifyRes = await fetch("/api/otp/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, otp }),
+      });
+      const verifyData = await verifyRes.json();
+      if (!verifyRes.ok) {
+        setError(verifyData.error || "Invalid or expired OTP");
+        setLoading(false);
+        return;
+      }
+
+      const authRes = await signIn("credentials", {
+        email: phone,
+        isPhoneOtp: "true",
+        redirect: false,
+      });
+
+      if (authRes?.error) {
+        setError(authRes.error);
+        setLoading(false);
+      } else {
+        window.location.assign(callbackUrl);
+      }
+    } catch {
+      setError("Network error verifying OTP.");
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = () => {
+    if (!googleEnabled) {
+      setError(
+        "Google Login needs your OAuth Client ID & Secret in .env.local (GOOGLE_CLIENT_ID & GOOGLE_CLIENT_SECRET) with redirect URI http://localhost:3000/api/auth/callback/google."
+      );
+      return;
+    }
+    setError(null);
+    signIn("google", { callbackUrl });
   };
 
   return (
@@ -309,6 +371,12 @@ export function SignIn() {
                 />
               </div>
 
+              {otpMessage && (
+                <div className="p-3 rounded-xl bg-emerald-950/60 border border-emerald-700/60 text-xs text-emerald-200">
+                  {otpMessage}
+                </div>
+              )}
+
               {otpSent && (
                 <div>
                   <label className="text-xs font-semibold text-[var(--cream)]/80 block mb-1.5">
@@ -339,7 +407,7 @@ export function SignIn() {
 
           {/* Google OAuth Button */}
           <button
-            onClick={() => signIn("google", { callbackUrl: "/notes" })}
+            onClick={handleGoogleSignIn}
             type="button"
             className="w-full h-11 px-4 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-sm font-semibold text-[var(--cream)] flex items-center justify-center gap-3 transition cursor-pointer"
           >

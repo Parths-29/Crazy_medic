@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 import { NotebookItem } from "./notebook-data";
-import { X, Check, ShieldCheck, ArrowRight, Loader2, Download, AlertCircle } from "lucide-react";
+import { X, Check, ShieldCheck, ArrowRight, Loader2, Download, AlertCircle, User, LogOut } from "lucide-react";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
 
 interface SheetDrawerProps {
@@ -14,8 +15,14 @@ interface SheetDrawerProps {
 }
 
 export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps) {
+  const { data: session } = useSession();
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+
+  useEffect(() => {
+    if (session?.user?.email && !email) setEmail(session.user.email);
+    if ((session?.user as any)?.phone && !phone) setPhone((session?.user as any).phone);
+  }, [session, email, phone]);
   const [couponInput, setCouponInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; finalRupees: number } | null>(null);
   const [couponMsg, setCouponMsg] = useState<string | null>(null);
@@ -412,6 +419,31 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
 
           {type === "menu" && (
             <div className="space-y-3 font-medium text-sm text-[var(--cream)]">
+              {session?.user && (
+                <div className="p-3.5 rounded-xl bg-white/5 border border-white/15 flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-full bg-[var(--coral)] text-[var(--navy)] flex items-center justify-center font-serif font-bold text-sm shrink-0">
+                      {(session.user.name || session.user.email || "M").charAt(0).toUpperCase()}
+                    </div>
+                    <div className="min-w-0">
+                      <span className="font-bold text-sm text-[var(--cream)] block truncate">
+                        {session.user.name || "Student Medico"}
+                      </span>
+                      <span className="text-[11px] font-mono text-[var(--cream)]/60 block truncate">
+                        {session.user.email}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    title="Sign Out"
+                    className="p-2 rounded-lg bg-white/5 hover:bg-red-500/20 text-[var(--cream)]/70 hover:text-red-300 transition cursor-pointer shrink-0"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
               <Link
                 href="/"
                 onClick={onClose}
@@ -440,13 +472,42 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
               >
                 My Purchased Library
               </Link>
-              <Link
-                href="/login"
-                onClick={onClose}
-                className="block py-2.5 border-b border-white/10 hover:text-[var(--coral)]"
-              >
-                Account Login
-              </Link>
+
+              {session?.user ? (
+                <>
+                  <Link
+                    href="/profile"
+                    onClick={onClose}
+                    className="block py-2.5 border-b border-white/10 hover:text-[var(--coral)]"
+                  >
+                    Profile & Devices
+                  </Link>
+                  <Link
+                    href="/orders"
+                    onClick={onClose}
+                    className="block py-2.5 border-b border-white/10 hover:text-[var(--coral)]"
+                  >
+                    Orders & Invoices
+                  </Link>
+                  {(session.user as any).role === "admin" && (
+                    <Link
+                      href="/admin"
+                      onClick={onClose}
+                      className="block py-2.5 border-b border-white/10 text-[var(--coral)] font-bold"
+                    >
+                      Admin Dashboard
+                    </Link>
+                  )}
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={onClose}
+                  className="block py-2.5 border-b border-white/10 hover:text-[var(--coral)]"
+                >
+                  Account Login
+                </Link>
+              )}
               <Link
                 href="/about"
                 onClick={onClose}

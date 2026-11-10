@@ -2,13 +2,15 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { MOCK_NOTEBOOKS } from "@/components/notebook/notebook-data";
 import { Container } from "@/components/ui/container";
-import { Search, Lock } from "lucide-react";
+import { Search, Lock, User } from "lucide-react";
 
 const SUBJECTS = ["All", "Ophthalmology", "General Surgery", "Paediatrics", "Obstetrics & Gynae", "Otolaryngology"];
 
 export default function NotesCatalogPage() {
+  const { data: session } = useSession();
   const [search, setSearch] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("All");
   const [sortBy, setSortBy] = useState<"featured" | "price-asc" | "price-desc">("featured");
@@ -44,19 +46,32 @@ export default function NotesCatalogPage() {
             </div>
           </Link>
 
-          <nav className="flex items-center gap-6 text-sm font-semibold">
-            <Link href="/" className="text-[var(--navy)]/70 hover:text-[var(--coral)] transition">
+          <nav className="flex items-center gap-4 sm:gap-6 text-sm font-semibold">
+            <Link href="/" className="hidden sm:inline text-[var(--navy)]/70 hover:text-[var(--coral)] transition">
               Home
             </Link>
-            <Link href="/stage" className="text-[var(--coral)] hover:underline font-bold transition">
+            <Link href="/stage" className="text-[var(--coral-ink)] hover:underline font-bold transition">
               Notebook Stage
             </Link>
             <Link href="/library" className="text-[var(--navy)]/70 hover:text-[var(--coral)] transition">
               My Library
             </Link>
-            <Link href="/login" className="text-[var(--navy)]/70 hover:text-[var(--coral)] transition">
-              Login
-            </Link>
+            {session?.user ? (
+              <Link
+                href="/profile"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--navy)] text-[var(--cream)] text-xs font-bold hover:bg-[var(--coral)] hover:text-[var(--navy)] transition"
+              >
+                <User className="w-3.5 h-3.5" />
+                <span className="max-w-[110px] truncate">{session.user.name?.split(" ")[0] || "Profile"}</span>
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="px-4 py-1.5 rounded-full border-2 border-[var(--navy)] text-[var(--navy)] hover:bg-[var(--navy)] hover:text-[var(--cream)] text-xs font-bold transition"
+              >
+                Login
+              </Link>
+            )}
           </nav>
         </Container>
       </header>

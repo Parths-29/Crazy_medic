@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 import { ArrowRight, ArrowLeft, CheckCircle2, ShieldCheck, BookOpen, AlertCircle } from "lucide-react";
 
 export default function SignupPage() {
@@ -30,7 +31,19 @@ export default function SignupPage() {
         throw new Error(data.error || "Failed to create account");
       }
 
-      setSuccess("Account registered! Please verify your email.");
+      // Immediately sign in after registration so the session is persisted
+      const loginRes = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (!loginRes?.error) {
+        window.location.assign("/library");
+        return;
+      }
+
+      setSuccess("Account registered! Please verify your email or sign in.");
       if (data.verifyUrlDev) {
         setDevVerifyLink(data.verifyUrlDev);
       }

@@ -3,6 +3,7 @@ import { Inter, Fraunces, Caveat } from "next/font/google";
 import "./globals.css";
 import { StudyPet } from "@/components/pet/study-pet";
 import { ServiceWorkerRegister } from "@/components/shared/sw-register";
+import { AuthProvider } from "@/components/providers/auth-provider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -46,9 +47,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${fraunces.variable} ${caveat.variable}`}>
       <body className="antialiased min-h-screen selection:bg-[var(--coral)] selection:text-[var(--navy)]">
-        {children}
-        <StudyPet />
-        <ServiceWorkerRegister />
+        <AuthProvider>
+          {children}
+          <StudyPet />
+          <ServiceWorkerRegister />
+        </AuthProvider>
       </body>
     </html>
   );

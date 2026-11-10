@@ -107,3 +107,4 @@ export async function GET(
     return new NextResponse("Error generating invoice", { status: 500 });
   }
 }
+

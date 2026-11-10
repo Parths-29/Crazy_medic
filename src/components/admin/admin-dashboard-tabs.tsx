@@ -364,3 +364,4 @@ export function AdminDashboardTabs() {
     </div>
   );
 }
+

@@ -61,3 +61,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: err.message || "Coupon error" }, { status: 500 });
   }
 }
+

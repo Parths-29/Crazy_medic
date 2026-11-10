@@ -4,11 +4,28 @@ import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
 
-  const token = await getToken({
-    req,
-    secret: process.env.AUTH_SECRET,
-  });
+  // Auth.js v5 uses `authjs.session-token` (HTTP) or `__Secure-authjs.session-token` (HTTPS)
+  // and passes the cookie name as the salt for HKDF decryption.
+  const hasSecureCookie = req.cookies.has("__Secure-authjs.session-token");
+  const cookieName = hasSecureCookie
+    ? "__Secure-authjs.session-token"
+    : "authjs.session-token";
+
+  let token = null;
+  if (secret) {
+    try {
+      token = await getToken({
+        req,
+        secret,
+        cookieName,
+        salt: cookieName,
+      });
+    } catch {
+      token = null;
+    }
+  }
 
   const isAuthenticated = !!token;
   const isAdmin = token?.role === "admin";
@@ -22,7 +39,6 @@ export async function middleware(req: NextRequest) {
     }
 
     if (!isAdmin) {
-      // Redirect unauthorized users to catalog with error
       return NextResponse.redirect(new URL("/notes?error=unauthorized_admin", req.url));
     }
   }
@@ -53,4 +69,3 @@ export const config = {
     "/profile/:path*",
   ],
 };
-
