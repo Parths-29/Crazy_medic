@@ -23,76 +23,93 @@ export function Coverflow({
   onCloseNotebook,
   onBuy,
 }: CoverflowProps) {
-  const currentItem = items[selectedIndex] || items[0];
-
   return (
     <div
       className="relative w-full flex items-center justify-center overflow-visible"
       style={{
-        perspective: "1600px",
-        height: "clamp(340px, 58dvh, 680px)",
+        perspective: "2200px",
+        height: "clamp(380px, 65dvh, 720px)",
       }}
     >
-      {/* If notebook is open, show only the active spread centered */}
-      {isOpen ? (
-        <div className="z-30">
-          <Notebook
-            item={currentItem}
-            isOpen={true}
-            onOpen={onOpenNotebook}
-            onClose={onCloseNotebook}
-            onBuy={onBuy}
-          />
-        </div>
-      ) : (
-        /* 3D Carousel Coverflow of closed notebooks */
-        <div className="relative flex items-center justify-center w-full h-full">
-          {items.map((item, index) => {
-            const offset = index - selectedIndex;
-            const isCenter = offset === 0;
+      <div className="relative flex items-center justify-center w-full h-full" style={{ transformStyle: "preserve-3d" }}>
+        {items.map((item, index) => {
+          const offset = index - selectedIndex;
+          const absOffset = Math.abs(offset);
+          const isCenter = offset === 0;
 
-            // Render 2 visible neighbors per side on desktop, 1 on mobile
-            if (Math.abs(offset) > 2) return null;
+          // Show up to 2 neighbors on each side
+          if (absOffset > 2) return null;
 
-            // STEP 2: Larger scale, wider rotation spread, smaller dimming
-            const xOffset = offset * 210; // wider spread so notebooks stand proud
-            const rotateY = offset * -42; // crisp 3D tilt angle
-            const scale = isCenter ? 1 : 0.88 - Math.abs(offset) * 0.07;
-            const opacity = isCenter ? 1 : Math.max(0.45, 0.78 - Math.abs(offset) * 0.18);
-            const zIndex = 30 - Math.abs(offset) * 6;
+          // If a book is open, smoothly part/fade the neighbor books out of the way
+          // without abruptly unmounting the active center book
+          const dir = offset > 0 ? 1 : -1;
+          const closedXExpr =
+            absOffset === 0
+              ? "0px"
+              : absOffset === 1
+              ? `calc(${dir} * clamp(150px, 21vw, 350px))`
+              : `calc(${dir} * clamp(250px, 36vw, 600px))`;
 
-            return (
-              <div
-                key={item.id}
-                onClick={() => {
-                  if (isCenter) {
-                    onOpenNotebook();
-                  } else {
-                    onSelectIndex(index);
-                  }
+          const openXExpr = `calc(${dir} * clamp(420px, 55vw, 900px))`;
+
+          // Balanced 3D tilt angles so neighbor covers stay clearly legible (never edge-on -84deg)
+          const rotateY =
+            absOffset === 0 ? 0 : absOffset === 1 ? dir * -24 : dir * -38;
+
+          const scale =
+            absOffset === 0 ? 1 : absOffset === 1 ? 0.86 : 0.73;
+
+          const translateZ =
+            absOffset === 0 ? (isOpen ? 40 : 60) : absOffset === 1 ? -60 : -160;
+
+          const opacity = isOpen
+            ? isCenter
+              ? 1
+              : 0
+            : absOffset === 0
+            ? 1
+            : absOffset === 1
+            ? 0.9
+            : 0.65;
+
+          const zIndex = isCenter ? 40 : 30 - absOffset * 8;
+
+          return (
+            <div
+              key={item.id}
+              onClick={() => {
+                if (isOpen) return;
+                if (isCenter) {
+                  onOpenNotebook();
+                } else {
+                  onSelectIndex(index);
+                }
+              }}
+              className="absolute transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+              style={{
+                transform: `translateX(${isOpen && !isCenter ? openXExpr : closedXExpr}) translateZ(${translateZ}px) scale(${scale}) rotateY(${rotateY}deg)`,
+                opacity,
+                zIndex,
+                pointerEvents: isOpen && !isCenter ? "none" : "auto",
+                cursor: isCenter ? "default" : "pointer",
+                transformStyle: "preserve-3d",
+              }}
+            >
+              <Notebook
+                item={item}
+                isOpen={isCenter && isOpen}
+                isActive={isCenter}
+                onOpen={() => {
+                  if (isCenter) onOpenNotebook();
+                  else onSelectIndex(index);
                 }}
-                className="absolute transition-all duration-500 ease-out cursor-pointer"
-                style={{
-                  transform: `translateX(${xOffset}px) scale(${scale}) rotateY(${rotateY}deg)`,
-                  opacity,
-                  zIndex,
-                  transformStyle: "preserve-3d",
-                }}
-              >
-                <Notebook
-                  item={item}
-                  isOpen={false}
-                  onOpen={() => {
-                    if (isCenter) onOpenNotebook();
-                    else onSelectIndex(index);
-                  }}
-                  onClose={onCloseNotebook}
-                />
-              </div>
-            );
-          })}
-        </div>
-      )}
+                onClose={onCloseNotebook}
+                onBuy={onBuy}
+              />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

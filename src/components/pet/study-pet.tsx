@@ -280,3 +280,4 @@ function MascotSvg({
     </svg>
   );
 }
+

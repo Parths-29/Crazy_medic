@@ -47,6 +47,9 @@ export default async function LibraryPage() {
             My Study Library
           </span>
           <div className="flex items-center gap-4 text-xs font-bold">
+            <Link href="/orders" className="text-[var(--navy)]/70 hover:text-[var(--coral)] transition">
+              Orders
+            </Link>
             <Link href="/profile" className="text-[var(--navy)]/70 hover:text-[var(--coral)] transition">
               Devices & Profile
             </Link>

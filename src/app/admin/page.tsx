@@ -7,7 +7,7 @@ import { User } from "@/models/User";
 import { Order } from "@/models/Order";
 import { ShieldCheck, BarChart3, Users, BookOpen, ShoppingBag, ArrowLeft } from "lucide-react";
 import { Container } from "@/components/ui/container";
-import { AdminNotesManager } from "@/components/admin/admin-notes-manager";
+import { AdminDashboardTabs } from "@/components/admin/admin-dashboard-tabs";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -117,9 +117,9 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Live Admin Notes Manager */}
+        {/* Live Admin Dashboard Modules */}
         <div className="p-6 sm:p-8 rounded-2xl bg-white border-3 border-[var(--navy)] shadow-[6px_6px_0_var(--navy)]">
-          <AdminNotesManager />
+          <AdminDashboardTabs />
         </div>
       </Container>
     </div>
