@@ -16,12 +16,45 @@ interface SheetDrawerProps {
 export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; finalRupees: number } | null>(null);
+  const [couponMsg, setCouponMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [createdOrder, setCreatedOrder] = useState<any>(null);
   const [verifiedOrder, setVerifiedOrder] = useState<any>(null);
 
   if (!type) return null;
+
+  const displayPrice = appliedCoupon ? appliedCoupon.finalRupees : item.price;
+
+  const handleApplyCoupon = async () => {
+    if (!couponInput.trim()) return;
+    setCouponMsg(null);
+    try {
+      const res = await fetch("/api/coupons/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: couponInput.trim(),
+          amountPaise: item.price * 100,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.valid) {
+        setAppliedCoupon({
+          code: data.code,
+          finalRupees: Math.round(data.finalAmountPaise / 100),
+        });
+        setCouponMsg(`Applied ${data.code}! Discounted to ₹${Math.round(data.finalAmountPaise / 100)}`);
+      } else {
+        setAppliedCoupon(null);
+        setCouponMsg(data.error || "Invalid coupon");
+      }
+    } catch {
+      setCouponMsg("Could not validate coupon");
+    }
+  };
 
   const handleCreateOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +69,7 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
           noteSlug: item.slug || item.id,
           email,
           phone,
+          couponCode: appliedCoupon?.code,
         }),
       });
 
@@ -167,7 +201,7 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
                 <div className="flex flex-col items-center">
                   <AnimatedTicket
                     ticketId={`TKT-${verifiedOrder.orderId.substring(0, 8).toUpperCase()}`}
-                    amount={item.price}
+                    amount={displayPrice}
                     studentName={email.split("@")[0]}
                     studentEmail={email}
                     studentPhone={`+91 ${phone}`}
@@ -175,15 +209,23 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
                     barcodeValue={verifiedOrder.orderId.substring(0, 12).toUpperCase()}
                     className="w-full"
                   />
-                  <div className="mt-4 w-full">
+                  <div className="mt-4 w-full space-y-2">
+                    <Link
+                      href={`/viewer/${verifiedOrder.orderId}`}
+                      onClick={onClose}
+                      className="w-full py-3.5 rounded-full bg-[var(--coral)] text-[var(--navy)] font-bold text-sm hover:bg-[var(--coral-hover)] transition flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+                    >
+                      <ShieldCheck className="w-4 h-4" />
+                      <span>Read Now in Protected Viewer</span>
+                    </Link>
                     <a
                       href={verifiedOrder.downloadUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full py-3.5 rounded-full bg-[var(--coral)] text-[var(--navy)] font-bold text-sm hover:bg-[var(--coral-hover)] transition flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+                      className="w-full py-2.5 rounded-full bg-white/10 text-[var(--cream)] font-semibold text-xs hover:bg-white/15 transition flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      <Download className="w-4 h-4" />
-                      <span>Open Watermarked Notes (PDF)</span>
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Open Watermarked PDF Stream</span>
                     </a>
                   </div>
                 </div>
@@ -195,7 +237,7 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
                     <h4 className="font-serif font-bold text-lg text-[var(--cream)] mt-1">{item.title}</h4>
                     <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
                       <span className="text-xs text-[var(--cream)]/70">Total Amount</span>
-                      <span className="text-xl font-mono font-bold text-[var(--coral)]">₹{item.price}</span>
+                      <span className="text-xl font-mono font-bold text-[var(--coral)]">₹{displayPrice}</span>
                     </div>
                   </div>
 
@@ -227,7 +269,7 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
                       </>
                     ) : (
                       <>
-                        <span>Complete Payment of ₹{item.price}</span>
+                        <span>Complete Payment of ₹{displayPrice}</span>
                         <ArrowRight className="w-4 h-4" />
                       </>
                     )}
@@ -243,9 +285,16 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
                         {item.title}
                       </span>
                     </div>
-                    <span className="font-mono text-lg font-bold text-[var(--coral)]">
-                      ₹{item.price}
-                    </span>
+                    <div className="text-right">
+                      {appliedCoupon && (
+                        <span className="font-mono text-xs line-through text-[var(--cream)]/40 block">
+                          ₹{item.price}
+                        </span>
+                      )}
+                      <span className="font-mono text-lg font-bold text-[var(--coral)]">
+                        ₹{displayPrice}
+                      </span>
+                    </div>
                   </div>
 
                   {errorMessage && (
@@ -284,6 +333,34 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
                       />
                     </div>
 
+                    {/* Coupon Input */}
+                    <div>
+                      <label className="text-xs font-semibold text-[var(--cream)] block mb-1">
+                        Promo / Coupon Code (Optional — try MEDICO10)
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={couponInput}
+                          onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                          placeholder="MEDICO10"
+                          className="flex-1 px-3 py-2 rounded-xl bg-black/40 border border-white/15 text-xs font-mono text-[var(--cream)] focus:outline-none focus:border-[var(--coral)] uppercase"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleApplyCoupon}
+                          className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-[var(--cream)] border border-white/15 transition cursor-pointer"
+                        >
+                          Apply
+                        </button>
+                      </div>
+                      {couponMsg && (
+                        <span className={`text-[11px] font-mono block mt-1 ${appliedCoupon ? "text-emerald-400" : "text-red-400"}`}>
+                          {couponMsg}
+                        </span>
+                      )}
+                    </div>
+
                     <div className="pt-2 text-xs text-[var(--cream)]/60 space-y-1 font-mono">
                       <p>• PDF is digitally stamped with your name, email & verified phone.</p>
                       <p>• Accessible on your mobile phone and laptop simultaneously.</p>
@@ -301,7 +378,7 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
                         </>
                       ) : (
                         <>
-                          <span>Proceed to Pay ₹{item.price}</span>
+                          <span>Proceed to Pay ₹{displayPrice}</span>
                           <ArrowRight className="w-4 h-4" />
                         </>
                       )}

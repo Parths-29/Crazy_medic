@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Note } from "@/models/Note";
 import { Order } from "@/models/Order";
+import { Coupon } from "@/models/Coupon";
 import { auth } from "@/lib/auth";
 import { isDisposableEmail } from "@/lib/disposable-emails";
 import { createRazorpayOrder } from "@/lib/razorpay";
@@ -10,7 +11,7 @@ import { MOCK_NOTEBOOKS } from "@/components/notebook/notebook-data";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { noteSlug, email, phone, utm } = body;
+    const { noteSlug, email, phone, couponCode, utm } = body;
 
     if (!email || !phone) {
       return NextResponse.json({ error: "Email and 10-digit phone number are required" }, { status: 400 });
@@ -32,6 +33,24 @@ export async function POST(req: NextRequest) {
 
     await connectDB();
     const session = await auth();
+    const cleanEmail = email.toLowerCase().trim();
+
+    // Prevent accidental duplicate purchase for already paid note
+    const existingPaid = await Order.findOne({
+      email: cleanEmail,
+      status: "paid",
+      "items.slug": noteSlug,
+    });
+    if (existingPaid) {
+      return NextResponse.json(
+        {
+          error: "You already own this notebook! Open your Study Library to read it.",
+          alreadyOwned: true,
+          existingOrderId: existingPaid._id,
+        },
+        { status: 409 }
+      );
+    }
 
     // Find note in DB or fallback to MOCK_NOTEBOOKS
     let note = await Note.findOne({ slug: noteSlug });
@@ -51,21 +70,36 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Apply server-computed coupon discount if valid
+    let finalAmountPaise = pricePaise;
+    if (couponCode && typeof couponCode === "string") {
+      const coupon = await Coupon.findOne({ code: couponCode.trim().toUpperCase(), active: true });
+      if (coupon && coupon.currentUses < coupon.maxUses && (!coupon.expiresAt || new Date(coupon.expiresAt) > new Date())) {
+        const discountPaise =
+          coupon.type === "percentage"
+            ? Math.round((pricePaise * coupon.value) / 100)
+            : Math.min(pricePaise, coupon.value * 100);
+        finalAmountPaise = Math.max(100, pricePaise - discountPaise);
+        coupon.currentUses += 1;
+        await coupon.save();
+      }
+    }
+
     // Create MongoDB Order
     const order = await Order.create({
       userId: session?.user?.id || undefined,
-      email: email.toLowerCase().trim(),
+      email: cleanEmail,
       phone: cleanPhone,
       items: [
         {
           noteId: note?._id || undefined,
           slug: noteSlug,
           title,
-          price: pricePaise,
+          price: finalAmountPaise,
           pdfKey,
         },
       ],
-      amount: pricePaise,
+      amount: finalAmountPaise,
       currency: "INR",
       status: "created",
       utm,
@@ -73,12 +107,12 @@ export async function POST(req: NextRequest) {
 
     // Create Razorpay Order
     const rzpOrder = await createRazorpayOrder({
-      amountPaise: pricePaise,
+      amountPaise: finalAmountPaise,
       receipt: `rcpt_${order._id.toString().substring(0, 10)}`,
       notes: {
         orderId: order._id.toString(),
         noteSlug,
-        studentEmail: email,
+        studentEmail: cleanEmail,
         studentPhone: cleanPhone,
       },
     });
@@ -90,7 +124,7 @@ export async function POST(req: NextRequest) {
       success: true,
       orderId: order._id,
       razorpayOrderId: rzpOrder.id,
-      amount: pricePaise,
+      amount: finalAmountPaise,
       currency: "INR",
       keyId: process.env.RAZORPAY_KEY_ID || "rzp_test_placeholder",
     });
