@@ -1,4 +1,4 @@
-# The Crazy Medic — by Vismay Sharma
+# The Crazy Medic — by Parth
 
 > **Handwritten medical & MBBS revision notes e-commerce platform** built with Next.js App Router, MongoDB Atlas, Auth.js v5, Razorpay, Cloudflare R2, forensic `pdf-lib` watermarking, and Gemini + Sarvam AI.
 
@@ -9,7 +9,7 @@ Designed around a **neo-brutalist × minimalist** visual identity (`--navy` `#14
 ## Visual Showcase
 
 ### 1. Neo-Brutalist Intro Landing Page (`/`)
-Introduces **Vismay Sharma** with bold serif typography, hard offset borders (`6px 6px 0 var(--navy)`), marquee subject ribbon, handwritten sample spread previews, and an expanding circular-wipe transition into the 3D Stage. Automatically welcomes back signed-in students.
+Introduces **Parth** with bold serif typography, hard offset borders (`6px 6px 0 var(--navy)`), marquee subject ribbon, handwritten sample spread previews, and an expanding circular-wipe transition into the 3D Stage. Automatically welcomes back signed-in students.
 
 ![Intro Landing Page](public/screenshots/01-intro-landing.png)
 
@@ -155,4 +155,4 @@ Configured via [`render.yaml`](render.yaml):
 
 ---
 
-**Built for The Crazy Medic — by Vismay Sharma.**
+**Built for The Crazy Medic — by Parth.**

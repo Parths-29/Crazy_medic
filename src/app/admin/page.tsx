@@ -43,7 +43,7 @@ export default async function AdminDashboardPage() {
               The Crazy Medic Control Room
             </h1>
             <p className="text-xs text-[var(--navy)]/65 font-sans mt-1">
-              Welcome back, {session?.user?.name || "Vismay Sharma"}. Manage live notes, student permissions, and store catalog.
+              Welcome back, {session?.user?.name || "Parth"}. Manage live notes, student permissions, and store catalog.
             </p>
           </div>
 

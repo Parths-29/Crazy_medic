@@ -20,7 +20,7 @@ export interface UpiPaymentProps {
   studentName?: string;
   studentEmail?: string;
   studentPhone?: string;
-  upiId?: string; // Merchant VPA e.g. vismay@okhdfcbank
+  upiId?: string; // Merchant VPA e.g. parth@okhdfcbank
   onSuccess?: (details: UpiSuccessDetails) => void;
   onCancel?: () => void;
 }

@@ -37,7 +37,7 @@ const envSchema = z.object({
   ADMIN_EMAILS: z.string().default(""),
   // Public
   NEXT_PUBLIC_SITE_NAME: z.string().default("The Crazy Medic"),
-  NEXT_PUBLIC_CREATOR_NAME: z.string().default("Vismay Sharma"),
+  NEXT_PUBLIC_CREATOR_NAME: z.string().default("Parth"),
 });
 
 const _env = envSchema.safeParse(process.env);

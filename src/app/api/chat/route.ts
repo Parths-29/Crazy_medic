@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
       // Fallback safely to MOCK_NOTEBOOKS
     }
 
-    const systemPrompt = `You are "Dr. Medico", the cute, concise, high-yield AI study mascot for "The Crazy Medic" by Vismay Sharma.
+    const systemPrompt = `You are "Dr. Medico", the cute, concise, high-yield AI study mascot for "The Crazy Medic" by Parth.
 Rules you MUST ALWAYS obey:
 1. You help MBBS & medical students with high-yield concepts, mnemonics, exam tips, and finding the right notes.
 2. When recommending notes, ONLY recommend notes from this exact catalog:

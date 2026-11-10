@@ -42,7 +42,7 @@ export default function NotesCatalogPage() {
               <span className="font-serif font-bold text-base tracking-tight text-[var(--navy)] group-hover:text-[var(--coral)] transition">
                 The Crazy Medic
               </span>
-              <span className="text-xs text-[var(--ink-muted)] font-mono">by Vismay Sharma</span>
+              <span className="text-xs text-[var(--ink-muted)] font-mono">by Parth</span>
             </div>
           </Link>
 

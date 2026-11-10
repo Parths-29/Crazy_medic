@@ -222,7 +222,7 @@ export function SignIn({ googleEnabled = false }: { googleEnabled?: boolean }) {
               The Crazy Medic
             </span>
             <span className="text-[10px] font-mono text-[var(--coral)] block">
-              by Vismay Sharma
+              by Parth
             </span>
           </div>
         </div>

@@ -79,7 +79,7 @@ function ProductDetailContent() {
                   The Crazy Medic
                 </span>
                 <span className="text-[11px] text-[var(--navy)]/60 font-sans block mt-0.5">
-                  by Vismay Sharma
+                  by Parth
                 </span>
               </div>
             </div>

@@ -411,7 +411,7 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
           {type === "about" && (
             <div className="space-y-4 text-sm">
               <p>
-                &ldquo;The Crazy Medic&rdquo; is curated by <strong className="text-[var(--coral)]">Vismay Sharma</strong>.
+                &ldquo;The Crazy Medic&rdquo; is curated by <strong className="text-[var(--coral)]">Parth</strong>.
               </p>
               <p>
                 Born out of the frustration with 800-page medical textbooks, these notes synthesize high-yield criteria, clinical flowcharts, and memory anchors directly tailored for distinction in university examinations.
@@ -525,7 +525,7 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
                 onClick={onClose}
                 className="block py-2.5 border-b border-white/10 hover:text-[var(--coral)]"
               >
-                About Vismay Sharma
+                About Parth
               </Link>
               <Link
                 href="/terms"
@@ -548,7 +548,7 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
         {/* Bottom subtle note */}
         <div className="pt-4 border-t border-white/10 text-xs text-[var(--cream)]/50 flex items-center justify-between font-mono">
           <span>The Crazy Medic</span>
-          <span>by Vismay Sharma</span>
+          <span>by Parth</span>
         </div>
       </div>
     </div>

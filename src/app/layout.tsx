@@ -24,8 +24,8 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  title: "The Crazy Medic — Vismay Sharma",
-  description: "Handwritten medical & biology study notes by Vismay Sharma.",
+  title: "The Crazy Medic — Parth",
+  description: "Handwritten medical & biology study notes by Parth.",
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",

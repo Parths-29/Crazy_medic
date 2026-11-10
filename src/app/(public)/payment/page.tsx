@@ -164,7 +164,7 @@ function PaymentDemoContent() {
               <div className="pt-6 border-t border-[#E2D8C3] flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-[var(--navy)]/60">
                 <div className="flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-[var(--coral)]" />
-                  <span>Verified Creator: Vismay Sharma</span>
+                  <span>Verified Creator: Parth</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600" />

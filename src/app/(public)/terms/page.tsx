@@ -10,7 +10,7 @@ export default function TermsPage() {
         <section>
           <h2 className="font-bold text-base text-gray-900 dark:text-white mb-2">1. Educational Disclaimer</h2>
           <p>
-            &ldquo;The Crazy Medic&rdquo; by Vismay Sharma provides digital study notes and visual summaries designed exclusively for academic and medical examination preparation. The materials provided do not constitute clinical guidance, official medical diagnosis, or treatment protocols.
+            &ldquo;The Crazy Medic&rdquo; by Parth provides digital study notes and visual summaries designed exclusively for academic and medical examination preparation. The materials provided do not constitute clinical guidance, official medical diagnosis, or treatment protocols.
           </p>
         </section>
 

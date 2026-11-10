@@ -47,7 +47,7 @@ export default function ContactPage() {
               ✓
             </div>
             <h3 className="font-bold text-base text-gray-900 dark:text-white">Message Dispatched!</h3>
-            <p className="text-xs text-gray-500 mt-1">Vismay or our study support team will reply within 24 hours.</p>
+            <p className="text-xs text-gray-500 mt-1">Parth or our study support team will reply within 24 hours.</p>
           </div>
         ) : (
           <form

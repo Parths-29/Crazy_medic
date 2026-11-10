@@ -72,7 +72,7 @@ export default function SignupPage() {
               The Crazy Medic
             </span>
             <span className="text-[11px] font-mono text-[var(--coral)] block mt-0.5">
-              by Vismay Sharma
+              by Parth
             </span>
           </div>
         </div>
@@ -223,7 +223,7 @@ export default function SignupPage() {
 
       {/* Footer */}
       <footer className="p-4 text-center text-xs text-[var(--cream)]/40 font-mono">
-        The Crazy Medic • by Vismay Sharma
+        The Crazy Medic • by Parth
       </footer>
     </div>
   );

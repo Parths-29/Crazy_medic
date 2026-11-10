@@ -67,7 +67,7 @@ export function Footer() {
               </div>
               <h3 className="font-display font-bold text-xl tracking-tight">The Crazy Medic</h3>
             </div>
-            <p className="text-xs text-gray-400 font-medium mb-3">Created with precision by Vismay Sharma</p>
+            <p className="text-xs text-gray-400 font-medium mb-3">Created with precision by Parth</p>
             <p className="text-sm text-gray-300 max-w-md leading-relaxed mb-4">
               Making medical & biology concepts ridiculously visual and easy to remember. Tailored specifically for MBBS, NEET, Nursing and allied healthcare examinations.
             </p>
@@ -114,7 +114,7 @@ export function Footer() {
         </div>
 
         <div className="pt-6 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-3">
-          <p>© 2026 The Crazy Medic (Vismay Sharma). All rights reserved.</p>
+          <p>© 2026 The Crazy Medic (Parth). All rights reserved.</p>
           <p>Protected digital goods stamped with dynamic purchaser watermarks.</p>
         </div>
       </div>

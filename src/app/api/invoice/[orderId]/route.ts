@@ -50,7 +50,7 @@ export async function GET(
     <div class="header">
       <div>
         <h1 class="brand">The Crazy Medic</h1>
-        <div class="sub">by Vismay Sharma • Digital Study Notes Receipt</div>
+        <div class="sub">by Parth • Digital Study Notes Receipt</div>
       </div>
       <span class="badge">PAID INVOICE</span>
     </div>

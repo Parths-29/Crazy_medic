@@ -34,7 +34,7 @@ export default function NotFound() {
       </div>
 
       <footer className="text-center text-[10px] text-[var(--ink-muted)] font-mono pb-2">
-        The Crazy Medic • Vismay Sharma
+        The Crazy Medic • Parth
       </footer>
     </div>
   );

@@ -4,11 +4,11 @@ import { auth } from "@/lib/auth";
 import { IntroPageClient } from "@/components/intro/intro-page-client";
 
 export const metadata: Metadata = {
-  title: "The Crazy Medic — by Vismay Sharma | Handwritten Medical Notes",
+  title: "The Crazy Medic — by Parth | Handwritten Medical Notes",
   description:
-    "Handwritten revision summaries covering high-yield MBBS university exams. Ophthalmology, Surgery, Paediatrics, OBGYN, ENT and PSM by Vismay Sharma.",
+    "Handwritten revision summaries covering high-yield MBBS university exams. Ophthalmology, Surgery, Paediatrics, OBGYN, ENT and PSM by Parth.",
   openGraph: {
-    title: "The Crazy Medic — by Vismay Sharma",
+    title: "The Crazy Medic — by Parth",
     description:
       "Handwritten medical notes built for fast revision in university prof exams.",
     type: "website",

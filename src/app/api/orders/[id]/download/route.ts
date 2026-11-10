@@ -60,7 +60,7 @@ export async function GET(
       color: rgb(0.08, 0.1, 0.18), // navy
     });
 
-    page1.drawText("Curated by Vismay Sharma • MBBS High-Yield Series", {
+    page1.drawText("Curated by Parth • MBBS High-Yield Series", {
       x: 50,
       y: 700,
       size: 11,

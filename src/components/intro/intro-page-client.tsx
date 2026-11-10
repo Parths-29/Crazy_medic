@@ -119,7 +119,7 @@ export function IntroPageClient({ user: serverUser, initialTransition = false }:
                 The Crazy Medic
               </span>
               <span className="text-[11px] font-sans text-[var(--navy)]/70 block -mt-0.5 font-bold">
-                by Vismay Sharma
+                by Parth
               </span>
             </div>
           </Link>
@@ -229,7 +229,7 @@ export function IntroPageClient({ user: serverUser, initialTransition = false }:
                 onClick={() => setMobileMenuOpen(false)}
                 className="hover:text-[var(--coral)] transition"
               >
-                About Vismay
+                About Parth
               </Link>
               <Link
                 href={user ? "/profile" : "/login"}
@@ -241,7 +241,7 @@ export function IntroPageClient({ user: serverUser, initialTransition = false }:
             </div>
 
             <div className="pt-4 border-t-2 border-white/20 text-xs font-mono text-[var(--cream)]/60 flex items-center justify-between">
-              <span>by Vismay Sharma</span>
+              <span>by Parth</span>
               <span>© The Crazy Medic</span>
             </div>
           </motion.div>
@@ -273,7 +273,7 @@ export function IntroPageClient({ user: serverUser, initialTransition = false }:
                       Hi, I&apos;m
                     </span>
                     <span className="font-serif font-black text-6xl sm:text-8xl lg:text-9xl text-[var(--coral-ink)] block mt-1">
-                      Vismay.
+                      Parth.
                     </span>
                   </h1>
                 )}
@@ -623,7 +623,7 @@ export function IntroPageClient({ user: serverUser, initialTransition = false }:
         </Container>
       </section>
 
-      {/* ================= 7. ABOUT VISMAY ================= */}
+      {/* ================= 7. ABOUT PARTH ================= */}
       <section className="py-16 sm:py-24 border-b-2 border-[var(--navy)] bg-[#EADFC9]/30">
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
@@ -635,7 +635,7 @@ export function IntroPageClient({ user: serverUser, initialTransition = false }:
                   <div className="w-16 h-16 rounded-full bg-[var(--coral)] text-[var(--navy)] font-serif font-black text-2xl flex items-center justify-center mb-3">
                     VS
                   </div>
-                  <span className="font-serif font-bold text-lg">Vismay Sharma</span>
+                  <span className="font-serif font-bold text-lg">Parth</span>
                   <span className="text-xs font-mono text-[var(--coral)] mt-1">Creator & Editor</span>
                   <span className="text-[11px] font-mono text-[var(--cream)]/40 mt-3">
                     [Photo uploaded via Admin &gt; Settings]
@@ -651,7 +651,7 @@ export function IntroPageClient({ user: serverUser, initialTransition = false }:
                   The Story
                 </span>
                 <h2 className="font-serif font-black text-3xl sm:text-5xl text-[var(--navy)] tracking-tight">
-                  About Vismay
+                  About Parth
                 </h2>
               </div>
 
@@ -663,7 +663,7 @@ export function IntroPageClient({ user: serverUser, initialTransition = false }:
                   These notes distill complex clinical classifications, surgical steps, and high-yield criteria into concise, memorable handwritten one-pagers.
                 </p>
                 <div className="p-3 bg-white border-2 border-[var(--navy)] text-xs font-mono text-[var(--navy)]/60">
-                  Note: Add Vismay&apos;s full background and story in Admin &gt; Settings.
+                  Note: Add Parth&apos;s full background and story in Admin &gt; Settings.
                 </div>
               </div>
 
@@ -807,7 +807,7 @@ export function IntroPageClient({ user: serverUser, initialTransition = false }:
       <footer className="bg-[#F5EEDF] py-10 border-t-2 border-[var(--navy)] text-xs text-[var(--navy)]/70">
         <Container wide className="flex flex-col sm:flex-row items-center justify-between gap-4 font-mono">
           <div>
-            <span className="font-bold text-[var(--navy)]">The Crazy Medic</span> • by Vismay Sharma
+            <span className="font-bold text-[var(--navy)]">The Crazy Medic</span> • by Parth
           </div>
 
           <div className="flex flex-wrap items-center gap-4 text-xs font-semibold">

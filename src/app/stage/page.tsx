@@ -56,7 +56,7 @@ export default function StagePage() {
       try {
         await navigator.share({
           title: `${currentItem.title} — The Crazy Medic`,
-          text: `Check out ${currentItem.title} by Vismay Sharma`,
+          text: `Check out ${currentItem.title} by Parth`,
           url: window.location.href,
         });
       } catch (err) {}
@@ -106,7 +106,7 @@ export default function StagePage() {
             className="text-left hidden sm:block cursor-pointer hover:opacity-80 transition"
           >
             <span className="font-serif font-bold text-sm block leading-none">The Crazy Medic</span>
-            <span className="text-[10px] text-[var(--cream)]/60 font-mono">by Vismay Sharma</span>
+            <span className="text-[10px] text-[var(--cream)]/60 font-mono">by Parth</span>
           </button>
         </div>
 

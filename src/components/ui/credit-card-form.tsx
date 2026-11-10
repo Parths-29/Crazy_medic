@@ -220,7 +220,7 @@ export const CreditCardForm = ({
               id="holder"
               type="text"
               autoComplete="cc-name"
-              placeholder="DR. VISMAY SHARMA"
+              placeholder="DR. PARTH"
               value={holder}
               onChange={(e) => setHolder(e.target.value.toUpperCase())}
               onFocus={() => setFocusField("holder")}

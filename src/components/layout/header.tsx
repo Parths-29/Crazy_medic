@@ -25,7 +25,7 @@ export function CreatorPill() {
               <span className="text-xs font-bold text-gray-900 dark:text-gray-100 tracking-tight">The Crazy Medic</span>
               <span className="text-[10px] bg-[#E8443A]/10 text-[#E8443A] font-semibold px-1.5 py-0.2 rounded-full">Doc</span>
             </div>
-            <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">by Vismay Sharma</span>
+            <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">by Parth</span>
           </div>
 
           <div className="ml-2 pl-2 border-l border-gray-200 dark:border-gray-700 hidden sm:flex items-center gap-1.5 text-xs text-gray-500">
@@ -52,7 +52,7 @@ export function CreatorPill() {
                 </div>
               </div>
               <div>
-                <h3 className="font-display font-bold text-xl text-gray-900 dark:text-gray-50">Vismay Sharma</h3>
+                <h3 className="font-display font-bold text-xl text-gray-900 dark:text-gray-50">Parth</h3>
                 <p className="text-sm text-[#E8443A] font-medium">The Crazy Medic • Med Educator</p>
               </div>
             </div>
@@ -110,7 +110,7 @@ export function Header() {
             <span className="font-display font-bold text-base leading-none text-gray-900 dark:text-white">
               The Crazy Medic
             </span>
-            <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">by Vismay Sharma</span>
+            <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">by Parth</span>
           </div>
         </Link>
 
