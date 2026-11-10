@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { KeyRound, ArrowRight, CheckCircle2 } from "lucide-react";
+import { KeyRound, ArrowRight } from "lucide-react";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -27,7 +27,7 @@ export default function ForgotPasswordPage() {
       if (data.resetUrlDev) {
         setDevResetUrl(data.resetUrlDev);
       }
-    } catch (err: any) {
+    } catch {
       setMessage("Failed to request password reset.");
     } finally {
       setLoading(false);
@@ -44,7 +44,7 @@ export default function ForgotPasswordPage() {
           Reset Password
         </h1>
         <p className="text-xs text-gray-500 mt-1">
-          Enter your registered email and we'll send you a recovery link
+          Enter your registered email and we&apos;ll send you a recovery link
         </p>
       </div>
 

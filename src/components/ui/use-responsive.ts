@@ -10,8 +10,10 @@ interface ResponsiveProp<T> {
 }
 
 export function useResponsive<T>(value: T | ResponsiveProp<T>): T {
+  const isObject = typeof value === "object" && value !== null && !Array.isArray(value);
+
   const [current, setCurrent] = useState<T>(() => {
-    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+    if (isObject) {
       const responsive = value as ResponsiveProp<T>;
       return responsive.sm ?? responsive.md ?? responsive.lg ?? responsive.xl ?? (value as T);
     }
@@ -19,13 +21,9 @@ export function useResponsive<T>(value: T | ResponsiveProp<T>): T {
   });
 
   useEffect(() => {
-    if (typeof value !== "object" || value === null || Array.isArray(value)) {
-      setCurrent(value as T);
-      return;
-    }
+    if (!isObject) return;
 
     const responsive = value as ResponsiveProp<T>;
-
     const update = () => {
       const width = window.innerWidth;
       if (width >= 1280 && responsive.xl !== undefined) setCurrent(responsive.xl);
@@ -36,11 +34,13 @@ export function useResponsive<T>(value: T | ResponsiveProp<T>): T {
       else setCurrent(value as unknown as T);
     };
 
-    update();
+    const rafId = requestAnimationFrame(update);
     window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, [value]);
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", update);
+    };
+  }, [value, isObject]);
 
-  return current;
+  return isObject ? current : (value as T);
 }
-

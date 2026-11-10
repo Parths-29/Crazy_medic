@@ -3,7 +3,7 @@
 import React, { useState, Suspense } from "react";
 import { notFound, useParams } from "next/navigation";
 import Link from "next/link";
-import { MOCK_NOTEBOOKS, NotebookItem } from "@/components/notebook/notebook-data";
+import { MOCK_NOTEBOOKS } from "@/components/notebook/notebook-data";
 import { Notebook } from "@/components/notebook/notebook";
 import { Container } from "@/components/ui/container";
 import { 
@@ -15,7 +15,6 @@ import {
   CheckCheck, 
   Star, 
   FileText, 
-  ShieldCheck, 
   ExternalLink,
   Eye,
   X
@@ -36,10 +35,6 @@ function ProductDetailContent() {
   const slug = params?.slug as string;
   const item = MOCK_NOTEBOOKS.find((n) => n.slug === slug);
 
-  if (!item) {
-    return notFound();
-  }
-
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -47,6 +42,10 @@ function ProductDetailContent() {
   const [isBuyModalOpen, setIsBuyModalOpen] = useState(false);
   const [isPaidDemo, setIsPaidDemo] = useState(false);
   const [activePreview, setActivePreview] = useState<string | null>(null);
+
+  if (!item) {
+    return notFound();
+  }
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(typeof window !== "undefined" ? window.location.href : "");
@@ -180,7 +179,7 @@ function ProductDetailContent() {
                 {/* Chapter Checklist */}
                 <div>
                   <h3 className="font-serif font-bold text-base text-[var(--navy)] mb-3.5">
-                    What's Inside?
+                    What&apos;s Inside?
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     {item.chapters.map((ch, idx) => (
@@ -272,7 +271,7 @@ function ProductDetailContent() {
                         ))}
                       </div>
                       <p className="text-xs sm:text-sm text-[var(--navy)]/90 font-medium">
-                        "{t.comment}"
+                        &ldquo;{t.comment}&rdquo;
                       </p>
                       <div className="flex items-center gap-2 pt-1 border-t border-[#E2D8C3]/50">
                         <div className="w-6 h-6 rounded-full bg-[var(--navy)] text-[var(--cream)] text-[10px] font-bold flex items-center justify-center">

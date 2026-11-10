@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { NotebookItem } from "./notebook-data";
-import { X, Check, ShieldCheck, ArrowRight, Loader2, Download, AlertCircle, User, LogOut } from "lucide-react";
+import { X, Check, ShieldCheck, ArrowRight, Loader2, Download, AlertCircle, LogOut } from "lucide-react";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
 
 interface SheetDrawerProps {
@@ -14,22 +14,34 @@ interface SheetDrawerProps {
   onOpenBuy: () => void;
 }
 
+interface CreatedOrderState {
+  orderId: string;
+  razorpayOrderId: string;
+  amount: number;
+}
+
+interface VerifiedOrderState {
+  orderId: string;
+  noteTitle: string;
+  downloadUrl: string;
+}
+
 export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps) {
   const { data: session } = useSession();
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [emailInput, setEmailInput] = useState<string | null>(null);
+  const [phoneInput, setPhoneInput] = useState<string | null>(null);
+  const email = emailInput ?? session?.user?.email ?? "";
+  const phone = phoneInput ?? session?.user?.phone ?? "";
+  const setEmail = (v: string) => setEmailInput(v);
+  const setPhone = (v: string) => setPhoneInput(v);
 
-  useEffect(() => {
-    if (session?.user?.email && !email) setEmail(session.user.email);
-    if ((session?.user as any)?.phone && !phone) setPhone((session?.user as any).phone);
-  }, [session, email, phone]);
   const [couponInput, setCouponInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; finalRupees: number } | null>(null);
   const [couponMsg, setCouponMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [createdOrder, setCreatedOrder] = useState<any>(null);
-  const [verifiedOrder, setVerifiedOrder] = useState<any>(null);
+  const [createdOrder, setCreatedOrder] = useState<CreatedOrderState | null>(null);
+  const [verifiedOrder, setVerifiedOrder] = useState<VerifiedOrderState | null>(null);
 
   if (!type) return null;
 
@@ -86,7 +98,7 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
       } else {
         setCreatedOrder(data);
       }
-    } catch (err: any) {
+    } catch {
       setErrorMessage("Network error connecting to payment gateway.");
     } finally {
       setLoading(false);
@@ -399,7 +411,7 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
           {type === "about" && (
             <div className="space-y-4 text-sm">
               <p>
-                "The Crazy Medic" is curated by <strong className="text-[var(--coral)]">Vismay Sharma</strong>.
+                &ldquo;The Crazy Medic&rdquo; is curated by <strong className="text-[var(--coral)]">Vismay Sharma</strong>.
               </p>
               <p>
                 Born out of the frustration with 800-page medical textbooks, these notes synthesize high-yield criteria, clinical flowcharts, and memory anchors directly tailored for distinction in university examinations.
@@ -489,7 +501,7 @@ export function SheetDrawer({ type, item, onClose, onOpenBuy }: SheetDrawerProps
                   >
                     Orders & Invoices
                   </Link>
-                  {(session.user as any).role === "admin" && (
+                  {session.user.role === "admin" && (
                     <Link
                       href="/admin"
                       onClick={onClose}

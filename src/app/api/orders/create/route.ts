@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Find note in DB or fallback to MOCK_NOTEBOOKS
-    let note = await Note.findOne({ slug: noteSlug });
+    const note = await Note.findOne({ slug: noteSlug });
     let pricePaise = 29900;
     let title = "Handwritten Medical Notes";
     let pdfKey = `notes/${noteSlug}.pdf`;

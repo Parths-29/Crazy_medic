@@ -23,7 +23,7 @@ export default function NotFound() {
           Page Not Found
         </h1>
         <p className="text-xs sm:text-sm text-[var(--ink-muted)] mb-6 leading-relaxed max-w-sm mx-auto">
-          The page or study note you're searching for might have been moved or doesn't exist.
+          The page or study note you&apos;re searching for might have been moved or doesn&apos;t exist.
         </p>
         <Link
           href="/notes"

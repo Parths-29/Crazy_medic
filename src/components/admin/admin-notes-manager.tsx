@@ -62,7 +62,19 @@ export function AdminNotesManager() {
   };
 
   useEffect(() => {
-    fetchNotes();
+    let mounted = true;
+    fetch("/api/admin/notes")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (mounted && data) setNotes(data.notes || []);
+      })
+      .catch((e) => console.error("Failed to load notes", e))
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const openCreateModal = () => {
@@ -478,7 +490,7 @@ export function AdminNotesManager() {
 
               <div>
                 <label className="text-xs font-mono font-bold text-[var(--navy)] block mb-1">
-                  What's Inside (One item per line)
+                  What&apos;s Inside (One item per line)
                 </label>
                 <textarea
                   value={whatsInsideStr}

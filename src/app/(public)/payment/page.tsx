@@ -16,17 +16,29 @@ export default function PaymentDemoPage() {
   );
 }
 
+interface ConfirmedOrder {
+  ticketId: string;
+  barcodeValue: string;
+  amount: number;
+  noteTitle: string;
+  studentName: string;
+  last4Digits: string;
+  paymentMethod: string;
+}
+
 function PaymentDemoContent() {
   const [method, setMethod] = useState<"upi" | "card">("upi");
-  const [confirmedOrder, setConfirmedOrder] = useState<any | null>(null);
+  const [confirmedOrder, setConfirmedOrder] = useState<ConfirmedOrder | null>(null);
 
   const amount = 49;
   const noteTitle = "Entire Ophthal for Prof Exam (60 Pages)";
 
   const handleCardSubmit = (state: CardState, validity: CardValidity) => {
     if (!validity.allValid) return;
+    const stamp = Date.now().toString();
     setConfirmedOrder({
-      ticketId: `ORD-${Date.now().toString().slice(-8)}`,
+      ticketId: `ORD-${stamp.slice(-8)}`,
+      barcodeValue: `CM-${stamp.slice(-10)}`,
       amount,
       noteTitle,
       studentName: state.holder || "Student Medico",
@@ -70,7 +82,7 @@ function PaymentDemoContent() {
                 studentName={confirmedOrder.studentName}
                 noteTitle={confirmedOrder.noteTitle}
                 paymentMethod={confirmedOrder.paymentMethod}
-                barcodeValue={`CM-${Date.now().toString().slice(-10)}`}
+                barcodeValue={confirmedOrder.barcodeValue}
                 onViewLibrary={() => {
                   if (typeof window !== "undefined") {
                     window.location.href = "/library";

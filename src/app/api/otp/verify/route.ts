@@ -78,7 +78,7 @@ export async function POST(req: Request) {
       }
     } else {
       // Find or create user with this verified phone
-      let user = await User.findOne({ phone: sanitizedPhone });
+      const user = await User.findOne({ phone: sanitizedPhone });
       if (user) {
         user.phoneVerified = true;
         if (!user.providers.includes("phone")) {

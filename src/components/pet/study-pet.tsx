@@ -32,6 +32,7 @@ export function StudyPet() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const seqRef = useRef(0);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -44,12 +45,17 @@ export function StudyPet() {
     return null;
   }
 
+  const nextId = (prefix: string) => {
+    seqRef.current += 1;
+    return `${prefix}_${seqRef.current}`;
+  };
+
   const sendMessage = async (textToSend: string) => {
     const clean = textToSend.trim();
     if (!clean || isThinking) return;
 
     const userMsg: ChatMessage = {
-      id: `u_${Date.now()}`,
+      id: nextId("u"),
       role: "user",
       content: clean,
     };
@@ -72,7 +78,7 @@ export function StudyPet() {
       setMessages((prev) => [
         ...prev,
         {
-          id: `a_${Date.now()}`,
+          id: nextId("a"),
           role: "assistant",
           content: replyText,
         },
@@ -81,7 +87,7 @@ export function StudyPet() {
       setMessages((prev) => [
         ...prev,
         {
-          id: `err_${Date.now()}`,
+          id: nextId("err"),
           role: "assistant",
           content: "Network hiccup! Try asking again in a second.",
         },

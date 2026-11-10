@@ -254,7 +254,9 @@ export default function JournalSpreadCarousel({
   const touched = React.useRef(false);
   const reducedRef = React.useRef(false);
   const onIndexRef = React.useRef(onIndexChange);
-  onIndexRef.current = onIndexChange;
+  React.useEffect(() => {
+    onIndexRef.current = onIndexChange;
+  }, [onIndexChange]);
 
   const paint = React.useCallback(() => {
     const w = width.current;
@@ -283,6 +285,8 @@ export default function JournalSpreadCarousel({
     }
   }, []);
 
+  const frameRef = React.useRef<(t: number) => void>(() => {});
+
   const frame = React.useCallback(
     (t: number) => {
       raf.current = 0;
@@ -293,10 +297,14 @@ export default function JournalSpreadCarousel({
         if (k >= 1) tween.current = null;
       }
       paint();
-      if (tween.current) raf.current = requestAnimationFrame(frame);
+      if (tween.current) raf.current = requestAnimationFrame(frameRef.current);
     },
     [paint]
   );
+
+  React.useEffect(() => {
+    frameRef.current = frame;
+  }, [frame]);
 
   const kick = React.useCallback(() => {
     if (!raf.current) raf.current = requestAnimationFrame(frame);

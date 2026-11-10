@@ -43,6 +43,36 @@ export function Notebook({
     }
   }, [isOpen, item.id]);
 
+  const handleNext = React.useCallback(
+    (e?: React.MouseEvent) => {
+      e?.stopPropagation();
+      if (flipState) return; // Prevent double-flip mid-turn
+      if (currentSpreadIndex < totalSpreads) {
+        setFlipState({
+          from: currentSpreadIndex,
+          to: currentSpreadIndex + 1,
+          direction: "next",
+        });
+      }
+    },
+    [currentSpreadIndex, flipState, totalSpreads]
+  );
+
+  const handlePrev = React.useCallback(
+    (e?: React.MouseEvent) => {
+      e?.stopPropagation();
+      if (flipState) return;
+      if (currentSpreadIndex > 0) {
+        setFlipState({
+          from: currentSpreadIndex,
+          to: currentSpreadIndex - 1,
+          direction: "prev",
+        });
+      }
+    },
+    [currentSpreadIndex, flipState]
+  );
+
   // Keyboard navigation while open
   useEffect(() => {
     if (!isOpen) return;
@@ -53,32 +83,7 @@ export function Notebook({
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, currentSpreadIndex, flipState]);
-
-  const handleNext = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    if (flipState) return; // Prevent double-flip mid-turn
-    if (currentSpreadIndex < totalSpreads) {
-      setFlipState({
-        from: currentSpreadIndex,
-        to: currentSpreadIndex + 1,
-        direction: "next",
-      });
-    }
-  };
-
-  const handlePrev = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    if (flipState) return;
-    if (currentSpreadIndex > 0) {
-      setFlipState({
-        from: currentSpreadIndex,
-        to: currentSpreadIndex - 1,
-        direction: "prev",
-      });
-    }
-  };
+  }, [isOpen, handleNext, handlePrev, onClose]);
 
   const finishFlip = () => {
     if (flipState) {

@@ -38,7 +38,23 @@ export function AdminDashboardTabs() {
   };
 
   useEffect(() => {
-    fetchTabData(activeTab);
+    if (activeTab === "notes") return;
+    let mounted = true;
+    fetch(`/api/admin/${activeTab}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!mounted || !data) return;
+        if (activeTab === "orders") setOrders(data.orders || []);
+        if (activeTab === "coupons") setCoupons(data.coupons || []);
+        if (activeTab === "users") setUsers(data.users || []);
+      })
+      .catch((e) => console.error(`Failed to load ${activeTab}`, e))
+      .finally(() => {
+        if (mounted) setLoadingTab(false);
+      });
+    return () => {
+      mounted = false;
+    };
   }, [activeTab]);
 
   const handleCreateCoupon = async (e: React.FormEvent) => {

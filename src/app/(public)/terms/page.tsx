@@ -10,14 +10,14 @@ export default function TermsPage() {
         <section>
           <h2 className="font-bold text-base text-gray-900 dark:text-white mb-2">1. Educational Disclaimer</h2>
           <p>
-            "The Crazy Medic" by Vismay Sharma provides digital study notes and visual summaries designed exclusively for academic and medical examination preparation. The materials provided do not constitute clinical guidance, official medical diagnosis, or treatment protocols.
+            &ldquo;The Crazy Medic&rdquo; by Vismay Sharma provides digital study notes and visual summaries designed exclusively for academic and medical examination preparation. The materials provided do not constitute clinical guidance, official medical diagnosis, or treatment protocols.
           </p>
         </section>
 
         <section>
           <h2 className="font-bold text-base text-gray-900 dark:text-white mb-2">2. Digital Products & Anti-Piracy Watermarking</h2>
           <p>
-            All purchased notes are view-only digital materials rendered securely within our web application. In order to protect intellectual property, each page is burned with a dynamic purchaser watermark displaying the buyer's verified name, email address, phone number, and order ID.
+            All purchased notes are view-only digital materials rendered securely within our web application. In order to protect intellectual property, each page is burned with a dynamic purchaser watermark displaying the buyer&apos;s verified name, email address, phone number, and order ID.
           </p>
           <p className="mt-2">
             Unauthorized distribution, sharing, or scraping of watermarked files will lead to immediate license revocation and account termination.

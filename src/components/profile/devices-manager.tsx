@@ -34,7 +34,21 @@ export function DevicesManager() {
   };
 
   useEffect(() => {
-    fetchDevices();
+    let mounted = true;
+    fetch("/api/user/devices")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!mounted || !data) return;
+        setDevices(data.devices || []);
+        setCurrentDeviceId(data.currentDeviceId || "");
+      })
+      .catch((e) => console.error("Failed to load devices", e))
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const handleRevoke = async (deviceId: string) => {

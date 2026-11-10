@@ -1,25 +1,22 @@
 "use client";
 
 import React, { useEffect, useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2, XCircle, ArrowRight, Loader2 } from "lucide-react";
 
 function VerifyEmailContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const token = searchParams.get("token");
 
-  const [loading, setLoading] = useState(true);
+  const [loadingState, setLoadingState] = useState(Boolean(token));
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [asyncError, setAsyncError] = useState<string | null>(null);
+  const loading = Boolean(token) && loadingState;
+  const error = !token ? "No verification token found in URL." : asyncError;
 
   useEffect(() => {
-    if (!token) {
-      setError("No verification token found in URL.");
-      setLoading(false);
-      return;
-    }
+    if (!token) return;
 
     const verify = async () => {
       try {
@@ -34,10 +31,10 @@ function VerifyEmailContent() {
           throw new Error(data.error || "Verification failed");
         }
         setSuccess(true);
-      } catch (err: any) {
-        setError(err?.message || "Failed to verify email");
+      } catch (err: unknown) {
+        setAsyncError(err instanceof Error ? err.message : "Failed to verify email");
       } finally {
-        setLoading(false);
+        setLoadingState(false);
       }
     };
 

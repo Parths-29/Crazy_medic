@@ -37,16 +37,6 @@ export function IntroPageClient({ user: serverUser, initialTransition = false }:
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(initialTransition);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [reducedMotion, setReducedMotion] = useState(false);
-
-  // Check reduced motion preference
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotion(mediaQuery.matches);
-    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, []);
 
   const newestNote = MOCK_NOTEBOOKS[0];
   const subjects = Array.from(new Set(MOCK_NOTEBOOKS.map((n) => n.subject.toUpperCase())));
@@ -58,7 +48,10 @@ export function IntroPageClient({ user: serverUser, initialTransition = false }:
   // Signature Transition trigger to /stage
   const handleOpenStage = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
-    if (reducedMotion) {
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) {
       router.push("/stage");
       return;
     }
@@ -277,7 +270,7 @@ export function IntroPageClient({ user: serverUser, initialTransition = false }:
                 ) : (
                   <h1 className="leading-none tracking-tight">
                     <span className="font-serif font-black text-5xl sm:text-7xl lg:text-8xl text-[var(--navy)] block">
-                      Hi, I'm
+                      Hi, I&apos;m
                     </span>
                     <span className="font-serif font-black text-6xl sm:text-8xl lg:text-9xl text-[var(--coral-ink)] block mt-1">
                       Vismay.
@@ -664,13 +657,13 @@ export function IntroPageClient({ user: serverUser, initialTransition = false }:
 
               <div className="space-y-4 text-base sm:text-lg text-[var(--navy)]/85 leading-relaxed">
                 <p>
-                  "The Crazy Medic" was born out of frustration with 800-page medical textbooks before professional examinations.
+                  &ldquo;The Crazy Medic&rdquo; was born out of frustration with 800-page medical textbooks before professional examinations.
                 </p>
                 <p>
                   These notes distill complex clinical classifications, surgical steps, and high-yield criteria into concise, memorable handwritten one-pagers.
                 </p>
                 <div className="p-3 bg-white border-2 border-[var(--navy)] text-xs font-mono text-[var(--navy)]/60">
-                  Note: Add Vismay's full background and story in Admin &gt; Settings.
+                  Note: Add Vismay&apos;s full background and story in Admin &gt; Settings.
                 </div>
               </div>
 

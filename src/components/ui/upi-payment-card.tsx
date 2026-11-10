@@ -4,6 +4,16 @@ import React, { useState, useEffect } from "react";
 import { ArrowRight, QrCode, Smartphone, CheckCircle2, Clock, ShieldCheck, RefreshCw } from "lucide-react";
 import { AnimatedTicket } from "@/components/ui/ticket-confirmation-card";
 
+export interface UpiSuccessDetails {
+  ticketId: string;
+  barcodeValue: string;
+  amount: number;
+  noteTitle: string;
+  studentName: string;
+  last4Digits: string;
+  paymentMethod: string;
+}
+
 export interface UpiPaymentProps {
   amount: number;
   noteTitle: string;
@@ -11,7 +21,7 @@ export interface UpiPaymentProps {
   studentEmail?: string;
   studentPhone?: string;
   upiId?: string; // Merchant VPA e.g. vismay@okhdfcbank
-  onSuccess?: (details: any) => void;
+  onSuccess?: (details: UpiSuccessDetails) => void;
   onCancel?: () => void;
 }
 
@@ -29,6 +39,7 @@ export function UpiPaymentCard({
   const [userVpa, setUserVpa] = useState("");
   const [timeLeft, setTimeLeft] = useState(300); // 5 mins
   const [paymentStatus, setPaymentStatus] = useState<"waiting" | "processing" | "success">("waiting");
+  const [confirmedTicket, setConfirmedTicket] = useState<{ ticketId: string; barcodeValue: string } | null>(null);
 
   // Timer countdown
   useEffect(() => {
@@ -47,28 +58,35 @@ export function UpiPaymentCard({
   const handleSimulatePayment = () => {
     setPaymentStatus("processing");
     setTimeout(() => {
+      const stamp = Date.now().toString();
+      const ticketId = `ORD-${stamp.slice(-8)}`;
+      const barcodeValue = `CM-${stamp.slice(-10)}`;
+      setConfirmedTicket({ ticketId, barcodeValue });
       setPaymentStatus("success");
       onSuccess?.({
-        ticketId: `ORD-${Date.now().toString().slice(-8)}`,
+        ticketId,
+        barcodeValue,
         amount,
         noteTitle,
         studentName,
+        last4Digits: "UPI",
+        paymentMethod: "UPI Instant QR",
       });
     }, 1500);
   };
 
-  if (paymentStatus === "success") {
+  if (paymentStatus === "success" && confirmedTicket) {
     return (
       <div className="flex flex-col items-center justify-center p-4">
         <AnimatedTicket
-          ticketId={`ORD-${Date.now().toString().slice(-8)}`}
+          ticketId={confirmedTicket.ticketId}
           amount={amount}
           studentName={studentName}
           studentEmail={studentEmail}
           studentPhone={studentPhone}
           noteTitle={noteTitle}
           paymentMethod="UPI Instant QR"
-          barcodeValue={`CM-${Date.now().toString().slice(-10)}`}
+          barcodeValue={confirmedTicket.barcodeValue}
           onViewLibrary={() => {
             if (typeof window !== "undefined") {
               window.location.href = "/library";

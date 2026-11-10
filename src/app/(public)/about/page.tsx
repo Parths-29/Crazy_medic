@@ -27,10 +27,10 @@ export default function AboutPage() {
 
         <div className="space-y-5 text-sm sm:text-base leading-relaxed text-[var(--navy)]/80">
           <p>
-            Hi! I'm Vismay Sharma, the creator behind <strong>The Crazy Medic</strong>.
+            Hi! I&apos;m Vismay Sharma, the creator behind <strong>The Crazy Medic</strong>.
           </p>
           <p>
-            Medical school is notorious for massive 800-page textbooks like Bailey & Love, Robbins, and Khurana. When exams hit, what you actually need isn't endless blocks of dense text—it's high-yield decision trees, memory hooks, and reproducible hand-drawn diagrams that you can sketch in a 10-mark university question.
+            Medical school is notorious for massive 800-page textbooks like Bailey & Love, Robbins, and Khurana. When exams hit, what you actually need isn&apos;t endless blocks of dense text—it&apos;s high-yield decision trees, memory hooks, and reproducible hand-drawn diagrams that you can sketch in a 10-mark university question.
           </p>
           <p>
             Every single page in these notebooks was illustrated by hand to ensure no fluff, no generic AI regurgitation, and 100% exam relevance.
